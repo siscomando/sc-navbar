@@ -1,0 +1,86 @@
+:host {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: block;
+  font-family: 'RobotoDraft', sans-serif;
+  background-color: #3B4D64;
+ }
+
+/* To ensure your styling works under the Shadow DOM polyfill, see
+   www.polymer-project.org/docs/polymer/styling.html#directives */
+polyfill-next-selector { content: ':host > h2'; }
+::content h2 {
+  color: blue;
+}
+/* MENU */
+paper-item {
+	color: rgba(255, 255, 255, .7);
+	font-weight: 100;
+	min-height: 20px;
+}
+paper-item .button-content {
+}
+paper-item.core-selected {
+	background-color: #EC8D44;
+}
+paper-item core-icon {
+	margin-right: 0.2em;
+}
+.mainContent {
+    height: 100%;
+}
+/* box profile */
+.profileMenu {
+	font-size: 15px;
+	position: absolute;
+	bottom: 0;
+	padding: 12px; 	
+	height: 42px; /* height total is 54px */
+	width: 100%;
+	background-color: #19293E;
+	color: #FFF;
+}
+#avatar {
+	width: 47px;
+	height: 47px;	
+	padding: 0px 5px 5px 5px;
+}
+#avatar img {
+	width: 42px;
+	height: 42px;
+}
+core-icon[icon="account-box"] {
+	color: #CCC;
+	width: 42px;
+	height: 42px;
+	background-color: #F9f9f9;
+}
+core-icon[icon="radio-button-on"] {
+	margin-right: 4px;
+	width: 12px;
+	height: 12px;
+}
+.username {
+
+}
+.status {
+	display: block;
+	color: #A8A8A8;
+}
+
+core-header-panel {
+	height: 100%;
+}
+core-toolbar {
+  color: white;
+  min-height: 64px;
+}
+
+core-toolbar paper-icon-button {
+  vertical-align: middle;
+}
+
+@media (min-width: 481px) {
+
+}
