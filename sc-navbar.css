@@ -30,6 +30,18 @@ paper-item core-icon {
 .mainContent {
     height: 100%;
 }
+/* core-menu scope */
+core-submenu {
+	font-family: 'RobotoDraft', sans-serif;
+	color: #FFF;
+	font-weight: 100;
+}
+core-submenu::shadow #submenu {
+	margin-left: -10px;
+}
+core-submenu.core-selected {
+	font-weight: 300;	
+}
 /* box profile */
 .profileMenu {
 	font-size: 15px;

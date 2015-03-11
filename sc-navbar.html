@@ -1,12 +1,11 @@
 <link rel="import" href="../font-roboto/roboto.html">
-<link rel="import" href="../core-toolbar/core-toolbar.html">
-<link rel="import" href="../paper-elements/paper-elements.html">
 <link rel="import" href="../core-icon/core-icon.html">
 <link rel="import" href="../core-menu/core-menu.html">
+<link rel="import" href="../core-menu/core-submenu.html">
 <link rel="import" href="../core-ajax/core-ajax.html">
-<link rel="import" href="../core-localstorage/core-localstorage.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../sc-item/sc-item.html">
+<link rel="import" href="../sc-sse/sc-sse.html">
 
 <!--
 sc-navbar is an custom element that retrieves and shows the issues. That
@@ -26,10 +25,12 @@ is required core-ajax.
 @status alpha
 @homepage http://github.com/siscomando/sc-navbar
 -->
-<polymer-element name="sc-navbar" attributes="notitle url author username avatar online method">
+<polymer-element name="sc-navbar" 
+  attributes="notitle url urlupdates author username avatar online method stream channel alias">
 
   <template>
     <link rel="stylesheet" href="sc-navbar.css">
+    <sc-sse stream="{{stream}}" channel="{{channel}}" alias="{{alias}}"></sc-sse>
     <!-- get issues and to persist 
     Please to implement an throttle to request issues from time in times. 
     After this you can to remove auto. 
@@ -37,7 +38,7 @@ is required core-ajax.
     <core-ajax id="coreAjax"
       auto
       url="{{url}}"
-      response={{response}}
+      response="{{response}}"
       handleAs="json"
       method="{{method ? method : 'GET'}}"
       >
@@ -47,10 +48,14 @@ is required core-ajax.
     <div class="mainContent">
       <!-- menu item: This object fire core-select event -->
       <core-menu>
-            <template repeat="{{issue in issues}}">
-              <sc-item icon="{{issue.icon}}" scid="{{issue.register}}">
-              	{{issue.title}}</sc-item>
-            </template>            
+          <template repeat="{{ issue in menuBySystem}}">
+            <core-submenu label="{{issue.name}}">
+                  <template repeat="{{ item in issue.issues }}">
+                    <sc-item scid="{{ item }}">
+                  	 {{ item }}</sc-item>
+                  </template>
+            </core-submenu>            
+          </template>
       </core-menu>
     </div>
     
@@ -105,38 +110,115 @@ is required core-ajax.
        * @default 'error'
        */      
       publish: {
-          displaySearch: {value: false, reflect: true},       
+          displaySearch: {value: false, reflect: true},  
+          select: 0, 
+          menuBySystem: [] 
       },
       /* the best place to the constructor for array or object */
       created: function() {
         // initialize but it not is turned public to use by users of the element
         // to turn public to use attributes or publish.
       },
+      ready: function() {
+        this.addEventListener('core-select', function(event){
+          /*
+          TODO: Not open when to exist only one issue
+          items = event.detail.item.items
+          countItens = items ? items.length : 0
+          if (countItens === 1) {
+          };
+          */
+          if (event.detail.isSelected) {
+            var scid = event.detail.item.scid;
+            // toggle drawer
+            var coreDrawer = document.querySelector('core-drawer-panel');
+            // access storage
+            var issuesSaved = JSON.parse(window.localStorage.getItem("dbIssues"));
+            for (var i=0; i< issuesSaved.length; i++) { 
+              // field to store id (_id, primary key) is register
+              if (issuesSaved[i]['register'] === scid) { 
+                this.fire('sc-select', {issue: issuesSaved[i]});
+                coreDrawer.togglePanel();
+              } 
+            }
+          }
+        });
+        this.addEventListener('sc-sse-response', function(e){
+          // handling updates
+          console.log(e.detail.response);
+        });
+      },      
       responseChanged: function() {
       	  this.issues = this.response;
       	  window.localStorage.setItem("dbIssues",JSON.stringify(this.issues));
+          this.updateIssues();
+          
+      },
+      updateIssues: function() {
+          // get issues
+
+          // check if new updates has the system/title existent
+
+          // if has ... add up
+
+          // if no ... create new item in navbar
+
+          this.sortByScope();
 
       },
-      ready: function() {
-        // Ready is a lifecycle callback.
-        // You can do setup work in here.
-        // More info: http://www.polymer-project.org/docs/polymer/polymer.html#lifecyclemethods
-        // simple test alert(this.issueInfo.register);
-        var scHeader = document.querySelector('sc-header');
-        this.addEventListener('core-select', function(event){
-        	if (event.detail.isSelected) {
-        		var scid = event.detail.item.scid;
-        		// access storage
-        		var issuesSaved = JSON.parse(window.localStorage.getItem("dbIssues"));
-        		for (var i=0; i< issuesSaved.length; i++) { 
-        			// field to store id (_id, primary key) is register
-        			if (issuesSaved[i]['register'] === scid) { 
-        				this.fire('sc-select', {issue: issuesSaved[i]});
-        			} 
-        		}
-        	}
-        });
+      hasOne: function(slist) {
+        myList = slist; 
+        if (myList.length === 1) {
+          return [true, myList[0]];
+        } else {
+          return [false];
+        }
       },
+      /**
+       * The `sortByScope` sort and grouping dbIssues by field.
+       *
+       * 
+       * @method sortByScope
+       * @param field [string]
+       * @default 'title'
+       */      
+      sortByScope: function(field, attachField) {
+          // initializing variables default
+          field = field ? field : "title";
+          attachField = attachField ? attachField : "register";
+          var issuesSaved = JSON.parse(window.localStorage.getItem("dbIssues"));
+          var scopeList = [];
+          for (item in issuesSaved) {
+               var obj = {};
+               var newField = issuesSaved[item][field]; // is value of the title
+               obj[newField] = {};
+               obj[newField]['name'] = newField; // monkey patch
+               obj[newField]['issues'] = []               
+               
+               if (scopeList.length === 0) {
+                  scopeList.push(obj)
+               } 
+               
+               var found = false;
+               for (nf in scopeList) {
+                   if (newField in scopeList[nf]) {
+                      scopeList[nf][newField]['name'] = newField; // monkey patch
+                      scopeList[nf][newField]['issues']
+                                          .push(issuesSaved[item][attachField]);
+                      found = true;
+                   } 
+               }
+
+               if (found === false) { 
+                 obj[newField]['issues'].push(issuesSaved[item][attachField]);            
+                 scopeList.push(obj); 
+               }                
+          }
+        for (elem in scopeList) { 
+          this.menuBySystem.push(scopeList[elem][Object.keys(scopeList[elem])[0]]); 
+        }
+        // return scopeList; // to comment this in production enviroment 
+    },
     });
   </script>
 
