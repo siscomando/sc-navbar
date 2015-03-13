@@ -27,6 +27,12 @@ paper-item.core-selected {
 paper-item core-icon {
 	margin-right: 0.2em;
 }
+.badge {
+	font-size: 0.8em;
+	color: #FFF;
+	background-color: #EA4A5B;
+	border-radius: 25px;
+}
 .mainContent {
     height: 100%;
 }
