@@ -1,5 +1,6 @@
 <link rel="import" href="../font-roboto/roboto.html">
 <link rel="import" href="../core-icon/core-icon.html">
+<link rel="import" href="../core-icons/image-icons.html">
 <link rel="import" href="../core-menu/core-menu.html">
 <link rel="import" href="../core-menu/core-submenu.html">
 <link rel="import" href="../core-ajax/core-ajax.html">
@@ -47,9 +48,13 @@ is required core-ajax.
     <!-- presentation issues -->
     <div class="mainContent">
       <!-- menu item: This object fire core-select event -->
-      <core-menu>
+      <core-menu id="coreMenu">
           <template repeat="{{ issue in menuBySystem}}">
-            <core-submenu label="{{issue.name}}">
+            <core-submenu>
+                  <div class="item-content">
+                    {{issue.name}}
+
+                  </div>
                   <template repeat="{{ item in issue.issues }}">
                     <sc-item scid="{{ item }}">
                   	 {{ item }}</sc-item>
@@ -61,8 +66,6 @@ is required core-ajax.
     
     <div class="profileMenu" horizontal layout>
       <div id="avatar">
-        <core-icon icon="account-box" style="{{ avatar ? 'display: none;' : '' }}"></core-icon>
-        <img src="{{ avatar }}" style="{{ avatar ? 'display: inline;' : 'display: none;'}}">
       </div>
       <div class="username" flex>{{username}}
         <span class="status">
@@ -112,7 +115,8 @@ is required core-ajax.
       publish: {
           displaySearch: {value: false, reflect: true},  
           select: 0, 
-          menuBySystem: [] 
+          menuBySystem: [],
+          avatar: null
       },
       /* the best place to the constructor for array or object */
       created: function() {
@@ -120,6 +124,7 @@ is required core-ajax.
         // to turn public to use attributes or publish.
       },
       ready: function() {
+        this.showAvatar();
         this.addEventListener('core-select', function(event){
           /*
           TODO: Not open when to exist only one issue
@@ -137,7 +142,7 @@ is required core-ajax.
             for (var i=0; i< issuesSaved.length; i++) { 
               // field to store id (_id, primary key) is register
               if (issuesSaved[i]['register'] === scid) { 
-                this.fire('sc-select', {issue: issuesSaved[i]});
+                this.fire('sc-select', {issue: issuesSaved[i]['register']});
                 coreDrawer.togglePanel();
               } 
             }
@@ -145,11 +150,22 @@ is required core-ajax.
         });
         this.addEventListener('sc-sse-response', function(e){
           // handling updates
-          console.log(e.detail.response);
+          doc =  e.detail.response;
+          if (!(doc == 1)) {
+            doc = JSON.parse(e.detail.response);
+            db = window.localStorage.getItem("dbIssues");
+            db = JSON.parse(db);;
+            db.push(doc);
+            window.localStorage.setItem("dbIssues",JSON.stringify(db));
+            // badge
+            // TODO: title = this.menuReferrer(doc.title);
+            // update info
+            this.updateIssues();
+          }
         });
       },      
       responseChanged: function() {
-      	  this.issues = this.response;
+      	  this.issues = this.response['issues'];
       	  window.localStorage.setItem("dbIssues",JSON.stringify(this.issues));
           this.updateIssues();
           
@@ -166,12 +182,25 @@ is required core-ajax.
           this.sortByScope();
 
       },
+      menuReferrer: function(name) {
+        // t.split(' ').join('')
+        if (!(name === undefined)) {
+          return name.split(' ').join('');
+        }
+      }, 
       hasOne: function(slist) {
         myList = slist; 
         if (myList.length === 1) {
           return [true, myList[0]];
         } else {
           return [false];
+        }
+      },
+      showAvatar: function() {
+        if (this.avatar) {
+          this.$.avatar.innerHTML = '<img src="' + this.avatar + '">';
+        } else {
+          this.$.avatar.innerHTML = '<core-icon icon="account-box"></core-icon>';
         }
       },
       /**
@@ -184,6 +213,7 @@ is required core-ajax.
        */      
       sortByScope: function(field, attachField) {
           // initializing variables default
+          // TODO: fix this implementation
           field = field ? field : "title";
           attachField = attachField ? attachField : "register";
           var issuesSaved = JSON.parse(window.localStorage.getItem("dbIssues"));
@@ -214,6 +244,7 @@ is required core-ajax.
                  scopeList.push(obj); 
                }                
           }
+        this.menuBySystem = [];
         for (elem in scopeList) { 
           this.menuBySystem.push(scopeList[elem][Object.keys(scopeList[elem])[0]]); 
         }
