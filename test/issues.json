@@ -1,44 +1,364 @@
-[
-{"register":"2015RI/0000000123",
-"title": "SICAP - SISTEMA",
-"uga": "SUPGS",
-"ugs": "SUNCE",
-"date": "20/03/2015 19h10",
-"icon": "0"
-},
-{"register":"2015RI/0000000653",
-"title": "ALM - GERENCIAMENTO",
-"uga": "SUPOP",
-"ugs": "SUNCE",
-"date": "15/03/2015 15h03",
-"icon": "1"
-},
-{"register":"2015RI/0000000965",
-"title": "EXPRESSO",
-"uga": "SUPOP",
-"ugs": "SUNCE",
-"date": "12/03/2015 22h22",
-"icon": "1"
-},
-{"register":"2015RI/0000000324",
-"title": "SIXEN - SISTEMA XEN",
-"uga": "SUPCD",
-"ugs": "SUNMP",
-"date": "11/03/2015 15h21",
-"icon": "2"
-},
-{"register":"2015RI/0000000145",
-"title": "SISEP - SEP MANAG",
-"uga": "SUPDE",
-"ugs": "SUNCE",
-"date": "11/03/2015 15h11",
-"icon": "1"
-},
-{"register":"2015RI/0000000865",
-"title": "SICAP - SISTEMA",
-"uga": "SUPDE",
-"ugs": "SUNFJ",
-"date": "10/03/2015 09h10",
-"icon": "0"
+{
+  "issues": [
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5522985ff2c3820d154b5e8f"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319791918
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001279", 
+      "register_orig": "2015RI00001279", 
+      "slug": "alm - gerenciamento-2015RI00001279", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "55229857f2c3820d13ea21d8"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319783745
+      }, 
+      "deadline": 120, 
+      "register": "2015RI0000138", 
+      "register_orig": "2015RI0000138", 
+      "slug": "alm - gerenciamento-2015RI0000138", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "55229849f2c3820d11bb56c1"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319769344
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001835", 
+      "register_orig": "2015RI00001835", 
+      "slug": "alm - gerenciamento-2015RI00001835", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "55229840f2c3820d0e2df80f"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319760024
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001665", 
+      "register_orig": "2015RI00001665", 
+      "slug": "alm - gerenciamento-2015RI00001665", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5522982bf2c3820d0d66dbec"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319739649
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001888", 
+      "register_orig": "2015RI00001888", 
+      "slug": "alm - gerenciamento-2015RI00001888", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "55229822f2c3820d0af39f12"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319730844
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001449", 
+      "register_orig": "2015RI00001449", 
+      "slug": "alm - gerenciamento-2015RI00001449", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "552297f9f2c3820d070233c7"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428319689029
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001581", 
+      "register_orig": "2015RI00001581", 
+      "slug": "alm - gerenciamento-2015RI00001581", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "55229440f2c3820cb188f97d"
+      }, 
+      "body": "Demanda", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428318734146
+      }, 
+      "deadline": 120, 
+      "register": "2015RI1020313", 
+      "register_orig": "2015RI/1020313", 
+      "slug": "siscop-2015RI1020313", 
+      "title": "SISCOP", 
+      "ugat": "SUPGS", 
+      "ugser": "SUPOP"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabc4"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683527
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001628", 
+      "register_orig": "2015RI00001628", 
+      "slug": "alm - gerenciamento-2015RI00001628", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabc3"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683522
+      }, 
+      "deadline": 120, 
+      "register": "2015RI000011008", 
+      "register_orig": "2015RI000011008", 
+      "slug": "alm - gerenciamento-2015RI000011008", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabc0"
+      }, 
+      "body": "Problema de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683452
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001933", 
+      "register_orig": "2015RI00001933", 
+      "slug": "alm - gerenciamento-2015RI00001933", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabbf"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683442
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001738", 
+      "register_orig": "2015RI00001738", 
+      "slug": "alm - gerenciamento-2015RI00001738", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabbe"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683349
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001139", 
+      "register_orig": "2015RI00001139", 
+      "slug": "alm - gerenciamento-2015RI00001139", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabbd"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683337
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001548", 
+      "register_orig": "2015RI00001548", 
+      "slug": "alm - gerenciamento-2015RI00001548", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabba"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683180
+      }, 
+      "deadline": 120, 
+      "register": "2015RI000011022", 
+      "register_orig": "2015RI000011022", 
+      "slug": "alm - gerenciamento-2015RI000011022", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabb8"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683077
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001530", 
+      "register_orig": "2015RI00001530", 
+      "slug": "alm - gerenciamento-2015RI00001530", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabb6"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683063
+      }, 
+      "deadline": 120, 
+      "register": "2015RI000011094", 
+      "register_orig": "2015RI000011094", 
+      "slug": "alm - gerenciamento-2015RI000011094", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }, 
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabb4"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683034
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001879", 
+      "register_orig": "2015RI00001879", 
+      "slug": "alm - gerenciamento-2015RI00001879", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    },
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabb3"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683034
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001999", 
+      "register_orig": "2015RI00001999", 
+      "slug": "alm - gerenciamento-2015RI00001999", 
+      "title": "ALM - GERENCIAMENTO", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    },
+    {
+      "_cls": "Issue", 
+      "_id": {
+        "$oid": "5521e82bf2c38206e30cabc1"
+      }, 
+      "body": "O Problema eh que a de autentica\u00e7\u00e3o no sistema", 
+      "classifier": 0, 
+      "created_at": {
+        "$date": 1428274683034
+      }, 
+      "deadline": 120, 
+      "register": "2015RI00001998", 
+      "register_orig": "2015RI00001998", 
+      "slug": "alm - gerenciamento-2015RI00001998", 
+      "title": "SICAP - SISTEMA", 
+      "ugat": "SUPOP", 
+      "ugser": "SUPGS"
+    }        
+  ]
 }
-]

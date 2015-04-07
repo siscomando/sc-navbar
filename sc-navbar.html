@@ -27,22 +27,18 @@ is required core-ajax.
 @homepage http://github.com/siscomando/sc-navbar
 -->
 <polymer-element name="sc-navbar" 
-  attributes="notitle url urlupdates author username avatar online method stream channel alias">
+  attributes="notitle url urlupdates author username avatar online method stream channel alias filter">
 
   <template>
     <link rel="stylesheet" href="sc-navbar.css">
+    <!-- get from remote -->
     <sc-sse stream="{{stream}}" channel="{{channel}}" alias="{{alias}}"></sc-sse>
-    <!-- get issues and to persist 
-    Please to implement an throttle to request issues from time in times. 
-    After this you can to remove auto. 
-    -->
     <core-ajax id="coreAjax"
       auto
       url="{{url}}"
       response="{{response}}"
       handleAs="json"
-      method="{{method ? method : 'GET'}}"
-      >
+      method="{{method ? method : 'GET'}}" >
     </core-ajax>
 
     <!-- presentation issues -->
@@ -53,7 +49,6 @@ is required core-ajax.
             <core-submenu>
                   <div class="item-content">
                     {{issue.name}}
-
                   </div>
                   <template repeat="{{ item in issue.issues }}">
                     <sc-item scid="{{ item }}">
@@ -62,8 +57,8 @@ is required core-ajax.
             </core-submenu>            
           </template>
       </core-menu>
-    </div>
-    
+
+    <!-- profile section -->
     <div class="profileMenu" horizontal layout>
       <div id="avatar">
       </div>
@@ -73,8 +68,12 @@ is required core-ajax.
             style="{{ online ? 'color: #B8E986;' : 'color: #CCC;' }}">
           </core-icon>{{online ? 'online' : 'offline' }}</span>
       </div>
-      
     </div>
+    <!-- profile section -->
+
+    </div>
+    
+
   </template>
 
   <script> 
@@ -171,13 +170,6 @@ is required core-ajax.
           
       },
       updateIssues: function() {
-          // get issues
-
-          // check if new updates has the system/title existent
-
-          // if has ... add up
-
-          // if no ... create new item in navbar
 
           this.sortByScope();
 
@@ -223,7 +215,7 @@ is required core-ajax.
                var newField = issuesSaved[item][field]; // is value of the title
                obj[newField] = {};
                obj[newField]['name'] = newField; // monkey patch
-               obj[newField]['issues'] = []               
+               obj[newField]['issues'] = [];             
                
                if (scopeList.length === 0) {
                   scopeList.push(obj)
