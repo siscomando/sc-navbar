@@ -1,7 +1,9 @@
 <link rel="import" href="../font-roboto/roboto.html">
 <link rel="import" href="../core-icon/core-icon.html">
 <link rel="import" href="../core-icons/image-icons.html">
+<link rel="import" href="../core-icons/communication-icons.html">
 <link rel="import" href="../core-menu/core-menu.html">
+<link rel="import" href="../paper-elements/paper-elements.html">
 <link rel="import" href="../core-menu/core-submenu.html">
 <link rel="import" href="../core-ajax/core-ajax.html">
 <link rel="import" href="../paper-item/paper-item.html">
@@ -43,6 +45,16 @@ is required core-ajax.
 
     <!-- presentation issues -->
     <div class="mainContent">
+
+      <!-- start: Search section -->
+      <div id="inputFilter">
+        <!-- <paper-icon-button id="btnComment" icon="communication:chat"></paper-icon-button> -->
+        <paper-input-decorator raised="true" label="Filtrar...">
+          <input id="filterText" type="text" is="core-input" name="f" value="" autocorrect="off" on-keyup="{{setFilter}}" />
+        </paper-input-decorator> 
+      </div>      
+      <!-- end: Search section -->
+
       <!-- menu item: This object fire core-select event -->
       <core-menu id="coreMenu">
           <template repeat="{{ issue in menuBySystem}}">
@@ -77,6 +89,16 @@ is required core-ajax.
   </template>
 
   <script> 
+    function search(string, myList){
+        var newArray = [];
+        for (var i=0; i < myList.length; i++) {
+            if (myList[i].register.indexOf(string) > -1) {
+                newArray.push(myList[i]);
+            }
+        }
+        return newArray;
+      }
+
     Polymer({ 
        /**
        * Fired when a item is selected.
@@ -164,7 +186,7 @@ is required core-ajax.
         });
       },      
       responseChanged: function() {
-      	  this.issues = this.response['issues'];
+      	  this.issueOrig = this.issues = this.response['issues'];
       	  window.localStorage.setItem("dbIssues",JSON.stringify(this.issues));
           this.updateIssues();
           
@@ -242,6 +264,30 @@ is required core-ajax.
         }
         // return scopeList; // to comment this in production enviroment 
     },
+      filterChanged: function(){
+        var issueOrig = this.issueOrig;
+        var issueRes = [];
+        if(this.filter) {
+          issuesFiltered = (search(this.filter, issueOrig).length > 0) ?
+          search(this.filter, issueOrig) : [];
+          window.localStorage.setItem("dbIssues", JSON.stringify(issuesFiltered));
+          this.updateIssues();
+        } else {
+          window.localStorage.setItem("dbIssues", JSON.stringify(issueOrig));
+          this.updateIssues();
+        }
+      },
+      /**
+       * The `setFilter` filters the issues listed in core-menu
+       *
+       * @method setFilter
+       */  
+      setFilter: function() {
+        this.filter = this.$.filterText.value;
+      },
+      showText: function() {
+        this.$.inputFilter.hidden = false;
+      }       
     });
   </script>
 
