@@ -29,7 +29,7 @@ is required core-ajax.
 @homepage http://github.com/siscomando/sc-navbar
 -->
 <polymer-element name="sc-navbar" 
-  attributes="notitle url urlupdates author username avatar online method stream channel alias filter">
+  attributes="notitle url urlupdates author username avatar avatarSize gravatarEnabled online method stream channel alias filter">
 
   <template>
     <link rel="stylesheet" href="sc-navbar.css">
@@ -80,6 +80,16 @@ is required core-ajax.
             style="{{ online ? 'color: #B8E986;' : 'color: #CCC;' }}">
           </core-icon>{{online ? 'online' : 'offline' }}</span>
       </div>
+      <paper-menu-button>
+          <paper-icon-button icon="menu" noink></paper-icon-button>
+          <paper-dropdown class="dropdown" valign="bottom">
+              <core-menu class="menu">
+                  <paper-item>Share</paper-item>
+                  <paper-item><a href="/settings">Settings</a></paper-item>
+                  <paper-item><a href="/logout">Logout</a></paper-item>
+              </core-menu>
+          </paper-dropdown>
+      </paper-menu-button>      
     </div>
     <!-- profile section -->
 
@@ -105,7 +115,7 @@ is required core-ajax.
        *
        *
        * @event sc-select
-       */     
+       */    
       /**
        * The `method` attribute sets an HTTP method to get issues.
        *
@@ -137,7 +147,9 @@ is required core-ajax.
           displaySearch: {value: false, reflect: true},  
           select: 0, 
           menuBySystem: [],
-          avatar: null
+          avatar: null,
+          avatarSize: "42px",
+          gravatarEnabled: true,
       },
       /* the best place to the constructor for array or object */
       created: function() {
@@ -212,7 +224,16 @@ is required core-ajax.
       },
       showAvatar: function() {
         if (this.avatar) {
-          this.$.avatar.innerHTML = '<img src="' + this.avatar + '">';
+
+          if (this.gravatarEnabled) {
+            // this.avatar is the md5 of the email
+            gravatarUrl = '//www.gravatar.com/avatar/' + this.avatar + "?s=" + this.avatarSize;
+            this.$.avatar.innerHTML = '<img src="' + gravatarUrl+ '">';
+          } else {
+            // this.avatar must be a link to image in media files
+            this.$.avatar.innerHTML = '<img src="' + this.avatar + '">';
+          }
+    
         } else {
           this.$.avatar.innerHTML = '<core-icon icon="account-box"></core-icon>';
         }

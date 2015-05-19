@@ -28,6 +28,24 @@ paper-item.core-selected {
 paper-item core-icon {
 	margin-right: 0.2em;
 }
+/* MENU DROPDOWN */
+paper-dropdown paper-item {
+	color: #000;
+	font-weight: 300;
+}
+paper-dropdown paper-item.core-selected {
+	background-color: #CCC;
+}
+paper-dropdown paper-item core-icon {
+	margin-right: 0.2em;
+}
+paper-dropdown paper-item a {
+	text-decoration: none;
+	color: inherit;
+}
+paper-dropdown core-menu {
+	margin: 0;
+}
 .badge {
 	font-size: 0.8em;
 	color: #FFF;
