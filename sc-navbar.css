@@ -29,6 +29,12 @@ paper-item core-icon {
 	margin-right: 0.2em;
 }
 /* MENU DROPDOWN */
+paper-dropdown {
+  position: absolute;
+  max-height: 150px; /* To change if add more menu */
+  left: 0px;
+  bottom: 0px;
+}
 paper-dropdown paper-item {
 	color: #000;
 	font-weight: 300;
@@ -61,7 +67,7 @@ paper-dropdown core-menu {
 /* core-menu scope */
 
 core-menu {
-	overflow: scroll;
+	overflow: hidden;
 	margin-bottom: 65px;
 }
 core-submenu {
