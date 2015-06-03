@@ -57,7 +57,7 @@ is required core-ajax.
 
       <!-- menu item: This object fire core-select event -->
       <core-menu id="coreMenu">
-          <template repeat="{{ issue in menuBySystem}}">
+          <template repeat="{{ issue in _groupedIssues}}">
             <core-submenu>
                   <div class="item-content">
                     {{issue.name}}
@@ -147,7 +147,7 @@ is required core-ajax.
       publish: {
           displaySearch: {value: false, reflect: true},  
           select: 0, 
-          menuBySystem: [],
+          _groupedIssues: [],
           avatar: null,
           avatarSize: "42px",
           gravatarEnabled: true,
@@ -168,36 +168,53 @@ is required core-ajax.
           };
           */
           if (event.detail.isSelected) {
-            var scid = event.detail.item.scid;
+            this.scid = event.detail.item.scid;
             // toggle drawer
             var coreDrawer = document.querySelector('core-drawer-panel');
             // access storage
-            var issuesSaved = JSON.parse(window.localStorage.getItem("dbIssues"));
-            for (var i=0; i< issuesSaved.length; i++) { 
+            var localIssues = JSON.parse(window.localStorage.getItem("dbIssues"));
+            for (var i=0; i< localIssues.length; i++) { 
               // field to store id (_id, primary key) is register
-              if (issuesSaved[i]['register'] === scid) { 
-                this.fire('sc-select', {issue: issuesSaved[i]['register']});
+              if (localIssues[i]['register'] === this.scid) { 
+                this.fire('sc-select', {issue: localIssues[i]['register']});
                 coreDrawer.togglePanel();
               } 
             }
           }
         });
+
+        // handling updates from sse
         this.addEventListener('sc-sse-response', function(e){
-          // handling updates
           doc =  e.detail.response;
           if (!(doc == 1)) {
             doc = JSON.parse(e.detail.response);
             db = window.localStorage.getItem("dbIssues");
-            db = JSON.parse(db);;
-            db.push(doc);
+            db = JSON.parse(db);
+            
+            if (doc.closed == true) {
+              for (item in db) {
+                if (db[item].register == doc.register) {
+                    db.splice(item, 1);
+                }
+                if (this.scid == doc.register) {
+                    location.href = '/'; // to prevent sc-header with old issue selected
+                }                
+              }
+            } else {
+              db.push(doc);  
+            }
+            
             window.localStorage.setItem("dbIssues",JSON.stringify(db));
-            // badge
-            // TODO: title = this.menuReferrer(doc.title);
-            // update info
             this.updateIssues();
           }
         });
-      },      
+      },   
+      cleanerClosed: function(elem, index, arr) {
+          // cleaner: to remove issue from db if exists closed issue in localStorage
+          if (elem.closed == true){
+            arr.splice(index, 1);
+        }
+      },  
       responseChanged: function() {
       	  this.issueOrig = this.issues = this.response['issues'];
       	  window.localStorage.setItem("dbIssues",JSON.stringify(this.issues));
@@ -205,9 +222,10 @@ is required core-ajax.
           
       },
       updateIssues: function() {
-
+          db = JSON.parse(window.localStorage.getItem("dbIssues"));
+          db.forEach(this.cleanerClosed);
+          db = window.localStorage.setItem("dbIssues", JSON.stringify(db));
           this.sortByScope();
-
       },
       menuReferrer: function(name) {
         // t.split(' ').join('')
@@ -240,7 +258,7 @@ is required core-ajax.
         }
       },
       /**
-       * The `sortByScope` sort and grouping dbIssues by field.
+       * The `sortByScope` sort and grouping attachField by field.
        *
        * 
        * @method sortByScope
@@ -249,17 +267,17 @@ is required core-ajax.
        */      
       sortByScope: function(field, attachField) {
           // initializing variables default
-          // TODO: fix this implementation
+          // TODO: fix this implementation in backend
           field = field ? field : "title";
           attachField = attachField ? attachField : "register";
-          var issuesSaved = JSON.parse(window.localStorage.getItem("dbIssues"));
+          var localIssues = JSON.parse(window.localStorage.getItem("dbIssues"));
           var scopeList = [];
-          for (item in issuesSaved) {
+          for (item in localIssues) {
                var obj = {};
-               var newField = issuesSaved[item][field]; // is value of the title
+               var newField = localIssues[item][field]; // is value of the title
                obj[newField] = {};
                obj[newField]['name'] = newField; // monkey patch
-               obj[newField]['issues'] = [];             
+               obj[newField]['issues'] = []; // arrary that receives issues            
                
                if (scopeList.length === 0) {
                   scopeList.push(obj)
@@ -270,19 +288,19 @@ is required core-ajax.
                    if (newField in scopeList[nf]) {
                       scopeList[nf][newField]['name'] = newField; // monkey patch
                       scopeList[nf][newField]['issues']
-                                          .push(issuesSaved[item][attachField]);
+                                          .push(localIssues[item][attachField]);
                       found = true;
                    } 
                }
 
                if (found === false) { 
-                 obj[newField]['issues'].push(issuesSaved[item][attachField]);            
+                 obj[newField]['issues'].push(localIssues[item][attachField]);            
                  scopeList.push(obj); 
                }                
           }
-        this.menuBySystem = [];
+        this._groupedIssues = [];
         for (elem in scopeList) { 
-          this.menuBySystem.push(scopeList[elem][Object.keys(scopeList[elem])[0]]); 
+          this._groupedIssues.push(scopeList[elem][Object.keys(scopeList[elem])[0]]); 
         }
         // return scopeList; // to comment this in production enviroment 
     },
