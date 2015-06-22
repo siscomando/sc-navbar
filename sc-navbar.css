@@ -70,6 +70,14 @@ core-menu {
 	overflow: hidden;
 	margin-bottom: 65px;
 }
+core-menu h5 {
+	color: white;
+	margin: 0;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-weight: 500;
+	opacity: 0.6;
+}
 core-submenu {
 	font-family: 'RobotoDraft', sans-serif;
 	color: #FFF;
