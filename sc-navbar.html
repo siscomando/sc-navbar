@@ -204,6 +204,9 @@ is required core-ajax.
               }
             } else {
               db.push(doc);  
+              // when doc is added in db to change issuesOrig. It was initiated 
+              // in first request.
+              this.issuesOrig = db;
             }
             
             window.localStorage.setItem("dbIssues",JSON.stringify(db));
@@ -226,7 +229,6 @@ is required core-ajax.
       updateIssues: function() {
           db = JSON.parse(window.localStorage.getItem("dbIssues"));
           db.forEach(this.cleanerClosed);
-          this.issuesOrig = db;
           window.localStorage.setItem("dbIssues", JSON.stringify(db));
           this.sortByScope();
       },
