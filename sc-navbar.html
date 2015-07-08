@@ -57,8 +57,9 @@ is required core-ajax.
 
       <!-- menu item: This object fire core-select event -->
       <core-menu id="coreMenu">
-          <h5>Em andamento ({{totalOpened}})</h5>
+          <h5>Em andamento <!--({{totalOpened}})--></h5>
           <template repeat="{{ issue in _groupedIssues}}">
+            <div class="counterItems">{{issue.issues.length}}</div>
             <core-submenu>
                   <div class="item-content">
                     {{issue.name}}

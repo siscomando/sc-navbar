@@ -78,13 +78,32 @@ core-menu h5 {
 	font-weight: 500;
 	opacity: 0.6;
 }
+core-menu .counterItems {
+	font-size: 0.65em; 
+	border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	-moz-border-radius: 4px; 
+	padding: 2px; 
+	background: rgba(255,255,255,0.5); 
+	float: left; 
+	margin-top: 12px; 
+	margin-right: 5px; 
+	color: #3B4D64; 
+	min-width: 10px; 
+	text-align: center;
+}
 core-submenu {
 	font-family: 'RobotoDraft', sans-serif;
 	color: #FFF;
 	font-weight: 100;
+	cursor: pointer;
 }
 core-submenu::shadow #submenu {
 	margin-left: -10px;
+	cursor: pointer;
+}
+core-submenu div.item-content{
+	cursor: pointer;	
 }
 core-submenu.core-selected {
 	font-weight: 300;	
