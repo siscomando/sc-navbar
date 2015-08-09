@@ -18,8 +18,8 @@ is required core-ajax.
 
     <sc-navbar
       url="issues.json"
-      username="chuangina" 
-      online="true" 
+      username="chuangina"
+      online="true"
       avatar="http://api.randomuser.me/portraits/thumb/women/79.jpg">
     </sc-navbar>
 
@@ -28,7 +28,7 @@ is required core-ajax.
 @status alpha
 @homepage http://github.com/siscomando/sc-navbar
 -->
-<polymer-element name="sc-navbar" 
+<polymer-element name="sc-navbar"
   attributes="notitle url urlupdates author username avatar avatarSize gravatarEnabled online method stream channel alias filter">
 
   <template>
@@ -40,8 +40,10 @@ is required core-ajax.
       url="{{url}}"
       response="{{response}}"
       handleAs="json"
-      method="{{method ? method : 'GET'}}" >
-    </core-ajax>
+      method="{{method ? method : 'GET'}}"
+      headers="{{ headerRequest() }}"
+      contentType="application/json"
+      ></core-ajax>
 
     <!-- presentation issues -->
     <div class="mainContent">
@@ -51,8 +53,8 @@ is required core-ajax.
         <!-- <paper-icon-button id="btnComment" icon="communication:chat"></paper-icon-button> -->
         <paper-input-decorator raised="true" label="Filtrar...">
           <input id="filterText" type="text" is="core-input" name="f" value="" autocorrect="off" on-keyup="{{setFilter}}" />
-        </paper-input-decorator> 
-      </div>      
+        </paper-input-decorator>
+      </div>
       <!-- end: Search section -->
 
       <!-- menu item: This object fire core-select event -->
@@ -68,7 +70,7 @@ is required core-ajax.
                     <sc-item scid="{{ item }}">
                   	 {{ item }}</sc-item>
                   </template>
-            </core-submenu>            
+            </core-submenu>
           </template>
       </core-menu>
 
@@ -78,7 +80,7 @@ is required core-ajax.
       </div>
       <div class="username" flex>{{username}}
         <span class="status">
-          <core-icon icon="radio-button-on" 
+          <core-icon icon="radio-button-on"
             style="{{ online ? 'color: #B8E986;' : 'color: #CCC;' }}">
           </core-icon>{{online ? 'online' : 'offline' }}</span>
       </div>
@@ -92,16 +94,16 @@ is required core-ajax.
                   <paper-item><a href="/logout">Logout</a></paper-item>
               </core-menu>
           </paper-dropdown>
-      </paper-menu-button>      
+      </paper-menu-button>
     </div>
     <!-- profile section -->
 
     </div>
-    
+
 
   </template>
 
-  <script> 
+  <script>
     function search(string, myList){
         var newArray = [];
         for (var i=0; i < myList.length; i++) {
@@ -112,20 +114,20 @@ is required core-ajax.
         return newArray;
       }
 
-    Polymer({ 
+    Polymer({
        /**
        * Fired when a item is selected.
        *
        *
        * @event sc-select
-       */    
+       */
       /**
        * The `method` attribute sets an HTTP method to get issues.
        *
        * @attribute method
        * @type string
        * @default 'GET'
-       */       
+       */
       /**
        * The `author` attribute sets an initial author
        *
@@ -133,22 +135,22 @@ is required core-ajax.
        * @type string
        * @default 'Horacio Ibrahim'
        */
-      author: 'Horacio Ibrahim', 
+      author: 'Horacio Ibrahim',
       /**
-       * The `icons` attribute sets an type for the issue as high, 
+       * The `icons` attribute sets an type for the issue as high,
        * high-infra, high-x.
        *
        *      Usage:
        *
        *          icons[0|1|2]
-       * 
+       *
        * @attribute icons
        * @type string
        * @default 'error'
-       */      
+       */
       publish: {
-          displaySearch: {value: false, reflect: true},  
-          select: 0, 
+          displaySearch: {value: false, reflect: true},
+          select: 0,
           _groupedIssues: [],
           avatar: null,
           avatarSize: "42px",
@@ -175,12 +177,12 @@ is required core-ajax.
             var coreDrawer = document.querySelector('core-drawer-panel');
             // access storage
             var localIssues = JSON.parse(window.localStorage.getItem("dbIssues"));
-            for (var i=0; i< localIssues.length; i++) { 
+            for (var i=0; i< localIssues.length; i++) {
               // field to store id (_id, primary key) is register
-              if (localIssues[i]['register'] === this.scid) { 
+              if (localIssues[i]['register'] === this.scid) {
                 this.fire('sc-select', {issue: localIssues[i]['register']});
                 coreDrawer.togglePanel();
-              } 
+              }
             }
           }
         });
@@ -192,7 +194,7 @@ is required core-ajax.
             doc = JSON.parse(e.detail.response);
             db = window.localStorage.getItem("dbIssues");
             db = JSON.parse(db);
-            
+
             // if doc is closed to remove from view (navbar)
             if (doc.closed == true) {
               for (item in db) {
@@ -201,31 +203,31 @@ is required core-ajax.
                 }
                 if (this.scid == doc.register) {
                     location.href = '/'; // to prevent sc-header with old issue selected. Go back home.
-                }                
+                }
               }
             } else {
-              db.push(doc);  
-              // when doc is added in db to change issuesOrig. It was initiated 
+              db.push(doc);
+              // when doc is added in db to change issuesOrig. It was initiated
               // in first request.
               this.issuesOrig = db;
             }
-            
+
             window.localStorage.setItem("dbIssues",JSON.stringify(db));
             this.updateIssues();
           }
         });
-      },   
+      },
       cleanerClosed: function(elem, index, arr) {
           // cleaner: to remove issue from db if exists closed issue in localStorage
           if (elem.closed == true){
             arr.splice(index, 1);
         }
-      },  
+      },
       responseChanged: function() {
-      	  this.issuesOrig = this.issues = this.response['issues'];
+      	  this.issuesOrig = this.issues = this.response['_items'];
       	  window.localStorage.setItem("dbIssues",JSON.stringify(this.issues));
           this.updateIssues();
-          
+
       },
       updateIssues: function() {
           db = JSON.parse(window.localStorage.getItem("dbIssues"));
@@ -238,9 +240,9 @@ is required core-ajax.
         if (!(name === undefined)) {
           return name.split(' ').join('');
         }
-      }, 
+      },
       hasOne: function(slist) {
-        myList = slist; 
+        myList = slist;
         if (myList.length === 1) {
           return [true, myList[0]];
         } else {
@@ -258,7 +260,7 @@ is required core-ajax.
             // this.avatar must be a link to image in media files
             this.$.avatar.innerHTML = '<img src="' + this.avatar + '">';
           }
-    
+
         } else {
           this.$.avatar.innerHTML = '<core-icon icon="account-box"></core-icon>';
         }
@@ -266,11 +268,11 @@ is required core-ajax.
       /**
        * The `sortByScope` sort and grouping attachField by field.
        *
-       * 
+       *
        * @method sortByScope
        * @param field [string]
        * @default 'title'
-       */      
+       */
       sortByScope: function(field, attachField) {
           // initializing variables default
           // TODO: fix this implementation in backend
@@ -283,12 +285,12 @@ is required core-ajax.
                var newField = localIssues[item][field]; // is value of the title
                obj[newField] = {};
                obj[newField]['name'] = newField; // monkey patch
-               obj[newField]['issues'] = []; // arrary that receives issues            
-               
+               obj[newField]['issues'] = []; // arrary that receives issues
+
                if (scopeList.length === 0) {
                   scopeList.push(obj)
-               } 
-               
+               }
+
                var found = false;
                for (nf in scopeList) {
                    if (newField in scopeList[nf]) {
@@ -296,19 +298,19 @@ is required core-ajax.
                       scopeList[nf][newField]['issues']
                                           .push(localIssues[item][attachField]);
                       found = true;
-                   } 
+                   }
                }
 
-               if (found === false) { 
-                 obj[newField]['issues'].push(localIssues[item][attachField]);            
-                 scopeList.push(obj); 
-               }                
+               if (found === false) {
+                 obj[newField]['issues'].push(localIssues[item][attachField]);
+                 scopeList.push(obj);
+               }
           }
         this._groupedIssues = [];
-        for (elem in scopeList) { 
-          this._groupedIssues.push(scopeList[elem][Object.keys(scopeList[elem])[0]]); 
+        for (elem in scopeList) {
+          this._groupedIssues.push(scopeList[elem][Object.keys(scopeList[elem])[0]]);
         }
-        // return scopeList; // to comment this in production enviroment 
+        // return scopeList; // to comment this in production enviroment
     },
       filterChanged: function(){
         var issuesOrig = this.issuesOrig;
@@ -327,7 +329,7 @@ is required core-ajax.
        * The `setFilter` filters the issues listed in core-menu
        *
        * @method setFilter
-       */  
+       */
       setFilter: function() {
         this.filter = this.$.filterText.value;
       },
@@ -336,7 +338,13 @@ is required core-ajax.
       },
       _groupedIssuesChanged: function() {
         this.totalOpened = this._groupedIssues.length;
-      }     
+      },
+      headerRequest: function(payload) {
+        var accountData = JSON.parse(window.localStorage.getItem("Account"));
+        var token = accountData.message.token;
+        var b64Token = btoa(token + ":");
+        return JSON.stringify({"Authorization": "Basic " + b64Token});
+      }
     });
   </script>
 
