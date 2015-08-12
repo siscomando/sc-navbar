@@ -11,7 +11,7 @@
 <link rel="import" href="../sc-sse/sc-sse.html">
 
 <!--
-sc-navbar is an custom element that retrieves and shows the issues. That
+sc-navbar is an custom element that retrieves and shows the response. That
 is required core-ajax.
 
 ##### Example
@@ -60,15 +60,15 @@ is required core-ajax.
       <!-- menu item: This object fire core-select event -->
       <core-menu id="coreMenu">
           <h5>Em andamento <!--({{totalOpened}})--></h5>
-          <template repeat="{{ issue in _groupedIssues}}">
+          <template repeat="{{ issue in _grouped}}">
             <div class="counterItems">{{issue.issues.length}}</div>
             <core-submenu>
                   <div class="item-content">
-                    {{issue.name}}
+                    {{issue.title}}
                   </div>
                   <template repeat="{{ item in issue.issues }}">
-                    <sc-item scid="{{ item }}">
-                  	 {{ item }}</sc-item>
+                    <sc-item scid="{{ item.register }}">
+                  	 {{ item.register }}</sc-item>
                   </template>
             </core-submenu>
           </template>
@@ -105,10 +105,24 @@ is required core-ajax.
 
   <script>
     function search(string, myList){
+        // newArray returns grouped issues
         var newArray = [];
+
         for (var i=0; i < myList.length; i++) {
-            if (myList[i].register.indexOf(string) > -1) {
-                newArray.push(myList[i]);
+            _arr = myList[i]['issues'];
+            newObject = {};
+            newObject['issues'] = [];
+            // makes a loop within issues and test if one or more elements from
+            // arr[i]['issues'] match with string. If matched to add item[order]
+            // from myList into newArray.
+            for (var n=0; n < _arr.length; n++) {
+              if (_arr[n]['register'].indexOf(string) > -1) {
+                  newObject['issues'].push(_arr[n]); // issues
+              }
+            }
+            if (newObject['issues'].length > 0) {
+                newObject['title'] = myList[i]['title'];
+                newArray.push(newObject); // {title:"XXX", issues:[]}
             }
         }
         return newArray;
@@ -151,7 +165,7 @@ is required core-ajax.
       publish: {
           displaySearch: {value: false, reflect: true},
           select: 0,
-          _groupedIssues: [],
+          _grouped: [],
           avatar: null,
           avatarSize: "42px",
           gravatarEnabled: true,
@@ -176,12 +190,16 @@ is required core-ajax.
             // toggle drawer
             var coreDrawer = document.querySelector('core-drawer-panel');
             // access storage
-            var localIssues = JSON.parse(window.localStorage.getItem("dbIssues"));
-            for (var i=0; i< localIssues.length; i++) {
-              // field to store id (_id, primary key) is register
-              if (localIssues[i]['register'] === this.scid) {
-                this.fire('sc-select', {issue: localIssues[i]['register']});
-                coreDrawer.togglePanel();
+            var localIssues = JSON.parse(window.localStorage.getItem("Issues"));
+
+            // This `for ` is to validate if the 'core-select' was done in the
+            // level of the item (register).
+            for (var i=0; i < localIssues.length; i++) {
+              for (var n=0; n < localIssues[i]['issues'].length; n++) {
+                if (localIssues[i]['issues'][n]['register'] === this.scid) {
+                  this.fire('sc-select', {issue: localIssues[i]['issues'][n]['register']});
+                  coreDrawer.togglePanel();
+                }
               }
             }
           }
@@ -192,27 +210,34 @@ is required core-ajax.
           doc =  e.detail.response;
           if (!(doc == 1)) {
             doc = JSON.parse(e.detail.response);
-            db = window.localStorage.getItem("dbIssues");
+            db = window.localStorage.getItem("Issues");
             db = JSON.parse(db);
 
             // if doc is closed to remove from view (navbar)
             if (doc.closed == true) {
               for (item in db) {
-                if (db[item].register == doc.register) {
-                    db.splice(item, 1);
-                }
-                if (this.scid == doc.register) {
-                    location.href = '/'; // to prevent sc-header with old issue selected. Go back home.
+                _issues = db[item]['issues'];
+                for (subitem in _issues) {
+                  if (_issues[subitem]['register'] == doc.register) {
+                      db.splice(item, 1);
+                  }
+                  if (this.scid == doc.register) {
+                      location.href = '/'; // to prevent sc-header with old issue selected. Go back home.
+                  }
                 }
               }
             } else {
-              db.push(doc);
+              for (item in db) {
+                if (db[item]['title'] == doc['title']) {
+                  db[item]['issues'].push(doc);
+                }
+              }
               // when doc is added in db to change issuesOrig. It was initiated
               // in first request.
               this.issuesOrig = db;
             }
-
-            window.localStorage.setItem("dbIssues",JSON.stringify(db));
+            //after sse
+            window.localStorage.setItem("Issues",JSON.stringify(db));
             this.updateIssues();
           }
         });
@@ -224,16 +249,20 @@ is required core-ajax.
         }
       },
       responseChanged: function() {
-      	  this.issuesOrig = this.issues = this.response['_items'];
-      	  window.localStorage.setItem("dbIssues",JSON.stringify(this.issues));
-          this.updateIssues();
+      	  this.issuesOrig = this._grouped = this.response['_grouped'];
+      	  window.localStorage.setItem("Issues",JSON.stringify(this._grouped));
+          // this.updateIssues(); This call must be changed by response with
+          // grouped issues with status opened (closed=false)
 
       },
       updateIssues: function() {
-          db = JSON.parse(window.localStorage.getItem("dbIssues"));
-          db.forEach(this.cleanerClosed);
-          window.localStorage.setItem("dbIssues", JSON.stringify(db));
-          this.sortByScope();
+          db = JSON.parse(window.localStorage.getItem("Issues"));
+          for (i in db) {
+            _issues = db[i]['issues'];
+            _issues.forEach(this.cleanerClosed);
+          }
+          window.localStorage.setItem("Issues", JSON.stringify(db));
+          this._grouped = db;
       },
       menuReferrer: function(name) {
         // t.split(' ').join('')
@@ -265,63 +294,21 @@ is required core-ajax.
           this.$.avatar.innerHTML = '<core-icon icon="account-box"></core-icon>';
         }
       },
-      /**
-       * The `sortByScope` sort and grouping attachField by field.
-       *
-       *
-       * @method sortByScope
-       * @param field [string]
-       * @default 'title'
-       */
-      sortByScope: function(field, attachField) {
-          // initializing variables default
-          // TODO: fix this implementation in backend
-          field = field ? field : "title";
-          attachField = attachField ? attachField : "register";
-          var localIssues = JSON.parse(window.localStorage.getItem("dbIssues"));
-          var scopeList = [];
-          for (item in localIssues) {
-               var obj = {};
-               var newField = localIssues[item][field]; // is value of the title
-               obj[newField] = {};
-               obj[newField]['name'] = newField; // monkey patch
-               obj[newField]['issues'] = []; // arrary that receives issues
-
-               if (scopeList.length === 0) {
-                  scopeList.push(obj)
-               }
-
-               var found = false;
-               for (nf in scopeList) {
-                   if (newField in scopeList[nf]) {
-                      scopeList[nf][newField]['name'] = newField; // monkey patch
-                      scopeList[nf][newField]['issues']
-                                          .push(localIssues[item][attachField]);
-                      found = true;
-                   }
-               }
-
-               if (found === false) {
-                 obj[newField]['issues'].push(localIssues[item][attachField]);
-                 scopeList.push(obj);
-               }
-          }
-        this._groupedIssues = [];
-        for (elem in scopeList) {
-          this._groupedIssues.push(scopeList[elem][Object.keys(scopeList[elem])[0]]);
-        }
-        // return scopeList; // to comment this in production enviroment
-    },
       filterChanged: function(){
         var issuesOrig = this.issuesOrig;
 
         if(this.filter) {
-          issuesFiltered = (search(this.filter, issuesOrig).length > 0) ?
-          search(this.filter, issuesOrig) : [];
-          window.localStorage.setItem("dbIssues", JSON.stringify(issuesFiltered));
+          issuesFiltered = []; // useful if not found string
+
+          if (search(this.filter, issuesOrig).length > 0) {
+             issuesFiltered = search(this.filter, issuesOrig);
+          }
+
+          window.localStorage.setItem("Issues", JSON.stringify(issuesFiltered));
           this.updateIssues();
+
         } else {
-          window.localStorage.setItem("dbIssues", JSON.stringify(issuesOrig));
+          window.localStorage.setItem("Issues", JSON.stringify(issuesOrig));
           this.updateIssues();
         }
       },
@@ -336,8 +323,8 @@ is required core-ajax.
       showText: function() {
         this.$.inputFilter.hidden = false;
       },
-      _groupedIssuesChanged: function() {
-        this.totalOpened = this._groupedIssues.length;
+      _groupedChanged: function() {
+        this.totalOpened = this._grouped.length;
       },
       headerRequest: function(payload) {
         var accountData = JSON.parse(window.localStorage.getItem("Account"));
